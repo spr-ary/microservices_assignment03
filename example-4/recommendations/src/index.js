@@ -66,8 +66,7 @@ async function main() {
 
         const parsedMsg = JSON.parse(msg.content.toString()); // Parse the JSON message.
         
-        console.log("Received a 'viewed' message:");
-        console.log(JSON.stringify(parsedMsg, null, 4)); // JUST PRINTING THE RECEIVED MESSAGE.
+        console.log("recommendation video " + parsedMsg.videoId);
 
         // ... ADD YOUR CODE HERE TO PROCESS THE MESSAGE ...
 

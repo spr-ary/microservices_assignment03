@@ -31,10 +31,10 @@ async function main() {
     //
     // Broadcasts the "viewed" message to other microservices.
     //
-	function broadcastViewedMessage(messageChannel, videoPath) {
-	    console.log(`Publishing message on "viewed" exchange.`);
-	        
-	    const msg = { videoPath: videoPath };
+    function broadcastViewedMessage(messageChannel, videoId) {
+        console.log(`Publishing message for video ${videoId}`);
+            
+        const msg = { videoId: videoId };
 	    const jsonMsg = JSON.stringify(msg);
 	    messageChannel.publish("viewed", "", Buffer.from(jsonMsg)); // Publishes message to the "viewed" exchange.
 	}
@@ -42,7 +42,7 @@ async function main() {
     const app = express();
 
     app.get("/video", async (req, res) => { // Route for streaming video.
-
+        const videoId = req.query.id;
         const videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
         const stats = await fs.promises.stat(videoPath);
 
@@ -53,7 +53,7 @@ async function main() {
     
         fs.createReadStream(videoPath).pipe(res);
 
-        broadcastViewedMessage(messageChannel, videoPath); // Sends the "viewed" message to indicate this video has been watched.
+        broadcastViewedMessage(messageChannel, videoId); // Sends the "viewed" message to indicate this video has been watched.
     });
 
     app.listen(PORT, () => {
@@ -66,3 +66,4 @@ main()
         console.error("Microservice failed to start.");
         console.error(err && err.stack || err);
     });
+
